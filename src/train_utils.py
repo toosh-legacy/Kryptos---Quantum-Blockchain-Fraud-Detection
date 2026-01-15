@@ -3,6 +3,7 @@ Training utilities for model training and evaluation.
 """
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, 
@@ -12,12 +13,83 @@ import numpy as np
 from typing import Dict, Tuple, Union
 
 
+class FocalLoss(nn.Module):
+    """
+    Focal Loss for addressing class imbalance.
+    
+    Focal Loss focuses training on hard examples by down-weighting easy examples.
+    Formula: FL(pt) = -alpha * (1-pt)^gamma * log(pt)
+    
+    Reference: Lin et al. "Focal Loss for Dense Object Detection" (2017)
+    
+    Args:
+        alpha: Weighting factor in range [0,1] to balance positive/negative examples
+               Set to frequency of negative class for balanced weighting
+        gamma: Focusing parameter for modulating loss (gamma >= 0)
+               gamma=0 is equivalent to CrossEntropyLoss
+               Higher gamma focuses more on hard examples
+        reduction: Specifies reduction to apply to output: 'none' | 'mean' | 'sum'
+    """
+    
+    def __init__(self, alpha: float = 0.25, gamma: float = 2.0, reduction: str = 'mean'):
+        super().__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.reduction = reduction
+    
+    def forward(self, inputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            inputs: Logits from model [batch_size, num_classes]
+            targets: Ground truth labels [batch_size]
+        
+        Returns:
+            Focal loss value
+        """
+        ce_loss = F.cross_entropy(inputs, targets, reduction='none')
+        pt = torch.exp(-ce_loss)  # pt is the probability of correct class
+        focal_loss = self.alpha * (1 - pt) ** self.gamma * ce_loss
+        
+        if self.reduction == 'mean':
+            return focal_loss.mean()
+        elif self.reduction == 'sum':
+            return focal_loss.sum()
+        else:
+            return focal_loss
+
+
+def compute_class_weights(labels: torch.Tensor, num_classes: int = 2) -> torch.Tensor:
+    """
+    Compute class weights inversely proportional to class frequencies.
+    
+    This helps balance training for imbalanced datasets by giving more
+    weight to minority classes.
+    
+    Args:
+        labels: Training labels
+        num_classes: Number of classes
+    
+    Returns:
+        Class weights tensor of shape [num_classes]
+    """
+    class_counts = torch.bincount(labels, minlength=num_classes).float()
+    
+    # Inverse frequency weighting
+    class_weights = 1.0 / (class_counts + 1e-6)  # Add epsilon to avoid division by zero
+    
+    # Normalize to sum to num_classes (keeps loss magnitude comparable)
+    class_weights = class_weights * num_classes / class_weights.sum()
+    
+    return class_weights
+
+
 def train_one_epoch(
     model: torch.nn.Module,
     data,
     optimizer: torch.optim.Optimizer,
     criterion,
-    train_mask: torch.Tensor
+    train_mask: torch.Tensor,
+    clip_grad_norm: float = None
 ) -> float:
     """
     Train model for one epoch.
@@ -28,6 +100,7 @@ def train_one_epoch(
         optimizer: Optimizer
         criterion: Loss function
         train_mask: Boolean mask for training nodes
+        clip_grad_norm: Maximum gradient norm for clipping (None = no clipping)
         
     Returns:
         Training loss
@@ -39,6 +112,11 @@ def train_one_epoch(
     loss = criterion(out[train_mask], data.y[train_mask])
     
     loss.backward()
+    
+    # Gradient clipping for stable training
+    if clip_grad_norm is not None:
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=clip_grad_norm)
+    
     optimizer.step()
     
     return loss.item()

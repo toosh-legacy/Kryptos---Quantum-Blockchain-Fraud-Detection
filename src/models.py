@@ -122,3 +122,115 @@ class GAT(nn.Module):
         """Reset all learnable parameters."""
         for conv in self.convs:
             conv.reset_parameters()
+
+
+class HybridGAT(nn.Module):
+    """
+    Hybrid Graph Attention Network combining classical and quantum features.
+    
+    This model processes both classical (original) and quantum-expanded features
+    through separate GAT branches, then fuses them for final prediction.
+    This allows the model to leverage both domain knowledge from classical features
+    and non-linear patterns captured by quantum features.
+    
+    Args:
+        classical_channels: Number of classical input features
+        quantum_channels: Number of quantum input features
+        hidden_channels: Number of hidden features per attention head
+        out_channels: Number of output classes
+        num_heads: Number of attention heads in GAT layers
+        num_layers: Number of GAT layers
+        dropout: Dropout probability
+        fusion_method: How to combine features ('concat', 'sum', 'attention')
+    """
+    
+    def __init__(
+        self,
+        classical_channels: int,
+        quantum_channels: int,
+        hidden_channels: int = 64,
+        out_channels: int = 2,
+        num_heads: int = 4,
+        num_layers: int = 2,
+        dropout: float = 0.3,
+        fusion_method: str = 'concat'
+    ):
+        super().__init__()
+        
+        self.fusion_method = fusion_method
+        
+        # Classical feature branch
+        self.gat_classical = GAT(
+            in_channels=classical_channels,
+            hidden_channels=hidden_channels,
+            out_channels=out_channels,
+            num_heads=num_heads,
+            num_layers=num_layers,
+            dropout=dropout
+        )
+        
+        # Quantum feature branch (with higher capacity)
+        self.gat_quantum = GAT(
+            in_channels=quantum_channels,
+            hidden_channels=hidden_channels * 2,  # More capacity for quantum
+            out_channels=out_channels,
+            num_heads=num_heads + 2,  # More attention heads
+            num_layers=num_layers,
+            dropout=dropout
+        )
+        
+        # Fusion layer
+        if fusion_method == 'concat':
+            self.fusion = nn.Linear(out_channels * 2, out_channels)
+        elif fusion_method == 'attention':
+            self.attention_weights = nn.Linear(out_channels * 2, 2)
+        # 'sum' fusion doesn't need additional parameters
+    
+    def forward(
+        self,
+        x_classical: torch.Tensor,
+        x_quantum: torch.Tensor,
+        edge_index: torch.Tensor
+    ) -> torch.Tensor:
+        """
+        Forward pass through hybrid model.
+        
+        Args:
+            x_classical: Classical node features [num_nodes, classical_channels]
+            x_quantum: Quantum node features [num_nodes, quantum_channels]
+            edge_index: Edge indices [2, num_edges]
+        
+        Returns:
+            Node predictions [num_nodes, out_channels]
+        """
+        # Process through separate branches
+        out_classical = self.gat_classical(x_classical, edge_index)
+        out_quantum = self.gat_quantum(x_quantum, edge_index)
+        
+        # Fuse outputs
+        if self.fusion_method == 'concat':
+            combined = torch.cat([out_classical, out_quantum], dim=1)
+            out = self.fusion(combined)
+        elif self.fusion_method == 'sum':
+            out = out_classical + out_quantum
+        elif self.fusion_method == 'attention':
+            combined = torch.cat([out_classical, out_quantum], dim=1)
+            attn_logits = self.attention_weights(combined)  # [N, 2]
+            attn_weights = F.softmax(attn_logits, dim=1)  # [N, 2]
+            
+            # Weighted sum
+            out = (attn_weights[:, 0:1] * out_classical + 
+                   attn_weights[:, 1:2] * out_quantum)
+        else:
+            raise ValueError(f"Unknown fusion method: {self.fusion_method}")
+        
+        return out
+    
+    def reset_parameters(self):
+        """Reset all learnable parameters."""
+        self.gat_classical.reset_parameters()
+        self.gat_quantum.reset_parameters()
+        if hasattr(self, 'fusion'):
+            self.fusion.reset_parameters()
+        if hasattr(self, 'attention_weights'):
+            self.attention_weights.reset_parameters()

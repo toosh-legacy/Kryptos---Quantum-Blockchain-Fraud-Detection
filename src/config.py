@@ -39,10 +39,20 @@ MODEL_CONFIG = {
     "out_channels": 2,
 }
 
+# Quantum model hyperparameters (scaled for expanded features)
+QUANTUM_MODEL_CONFIG = {
+    "hidden_channels": 128,  # 2x for expanded feature space
+    "num_heads": 6,          # More heads for richer attention
+    "num_layers": 3,         # Extra depth for complex patterns
+    "dropout": 0.4,          # Higher dropout for regularization
+    "out_channels": 2,
+}
+
 # Quantum feature mapping
 QUANTUM_CONFIG = {
     "expansion_factor": 2,
     "fourier_features": True,
+    "learnable": True,  # Use learnable quantum features
 }
 
 # Training configuration
@@ -56,6 +66,14 @@ TRAINING_CONFIG = {
     "random_seed": 42,
     "train_test_split": 0.2,
     "train_val_split": 0.25,
+    "use_class_weights": True,      # Enable class weighting for imbalance
+    "use_focal_loss": False,        # Alternative to class weights
+    "focal_alpha": 0.25,            # Focal loss alpha
+    "focal_gamma": 2.0,             # Focal loss gamma
+    "clip_grad_norm": 1.0,          # Gradient clipping
+    "lr_scheduler": True,           # Use learning rate scheduler
+    "lr_patience": 10,              # Patience for LR reduction
+    "lr_factor": 0.5,               # LR reduction factor
 }
 
 # Evaluation configuration
