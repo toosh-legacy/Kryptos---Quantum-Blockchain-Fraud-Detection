@@ -25,16 +25,29 @@ The code is configured to work with the Elliptic Bitcoin Dataset format where:
 - Class 2 = licit transactions  
 - Class 3 = unknown/unlabeled transactions
 
-### 3. Run Notebooks in Order
+### 3. Run Scripts in Order
 
-**01_setup.ipynb** - Verify environment and create directories  
-**02_data_graph.ipynb** - Load data and build graph (5-10 min)  
-**03_train_gat_baseline.ipynb** - Train baseline GAT (10-20 min)  
-**04_eval_baseline.ipynb** - Evaluate baseline model (2-5 min)  
-**05_quantum_feature_map.ipynb** - Apply quantum transformation (1 min)  
-**06_train_gat_quantum.ipynb** - Train quantum GAT (10-20 min)  
-**07_eval_quantum.ipynb** - Compare models (2-5 min)  
-**08_explain_llm.ipynb** - Generate explanations (requires OpenAI API)
+All scripts are organized in the `scripts/` folder:
+
+**scripts/01_setup.py** - Verify environment and create directories  
+**scripts/02_data_graph.py** - Load data and build graph (5-10 min)  
+**scripts/03_train_gat_baseline.py** - Train baseline GAT (10-20 min)  
+**scripts/04_eval_baseline.py** - Evaluate baseline model (2-5 min)  
+**scripts/05_quantum_feature_map.py** - Apply quantum transformation (1 min)  
+**scripts/06_train_gat_quantum.py** - Train quantum GAT (10-20 min)  
+**scripts/07_eval_quantum.py** - Compare models (2-5 min)  
+**scripts/08_explain_llm.py** - Generate explanations (requires OpenAI API)
+
+**Run individual scripts:**
+```bash
+python scripts/01_setup.py
+python scripts/02_data_graph.py
+```
+
+**Or run complete pipeline:**
+```bash
+python run_all.py
+```
 
 **Total time: ~1 hour**
 

@@ -1,5 +1,5 @@
 {
-  "training_time": 790.4294266700745,
+  "training_time": 1580.6631231307983,
   "best_val_f1": 0.7367336424523442,
   "total_epochs": 84,
   "history": {

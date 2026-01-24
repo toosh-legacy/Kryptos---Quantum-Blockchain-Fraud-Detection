@@ -1,6 +1,6 @@
 {
   "model_type": "GAT_Baseline",
-  "training_time": 309.6072368621826,
+  "training_time": 316.65746879577637,
   "best_epoch": 170,
   "performance": {
     "train": {
