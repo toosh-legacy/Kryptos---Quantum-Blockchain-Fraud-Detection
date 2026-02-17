@@ -1,0 +1,81 @@
+{
+  "description": "Optimized Final Training Pipeline - Best Model Ever",
+  "timestamp": "2026-02-15 21:49:31",
+  "winner": "\u26aa BASELINE WINS",
+  "baseline": {
+    "model_type": "GAT",
+    "params": {
+      "hidden_channels": 64,
+      "num_heads": 4,
+      "num_layers": 2,
+      "dropout": 0.3
+    },
+    "train_metrics": {
+      "accuracy": 0.9285557747096209,
+      "precision": 0.5793671895772401,
+      "recall": 0.9784463403682083,
+      "f1": 0.7277889111556446,
+      "roc_auc": 0.9898404073363892
+    },
+    "val_metrics": {
+      "accuracy": 0.922077922077922,
+      "precision": 0.5594795539033457,
+      "recall": 0.9465408805031447,
+      "f1": 0.7032710280373832,
+      "roc_auc": 0.981973381794858
+    },
+    "test_metrics": {
+      "accuracy": 0.9219040801717967,
+      "precision": 0.5597374179431073,
+      "recall": 0.9376832844574781,
+      "f1": 0.7010139764318991,
+      "roc_auc": 0.9795152938855631
+    },
+    "training_time": 318.91401171684265
+  },
+  "quantum": {
+    "model_type": "GAT with Quantum Features",
+    "feature_mapper": {
+      "use_angle_encoding": true,
+      "use_interactions": false,
+      "use_fourier": false,
+      "max_output_dim": 128,
+      "actual_output_dim": 128
+    },
+    "params": {
+      "hidden_channels": 80,
+      "num_heads": 4,
+      "num_layers": 2,
+      "dropout": 0.35
+    },
+    "train_metrics": {
+      "accuracy": 0.8984001753232522,
+      "precision": 0.4890229191797346,
+      "recall": 0.9101930848675348,
+      "f1": 0.6362209667294413,
+      "roc_auc": 0.9658928708367355
+    },
+    "val_metrics": {
+      "accuracy": 0.9001942938950813,
+      "precision": 0.4936416184971098,
+      "recall": 0.8951781970649895,
+      "f1": 0.6363636363636364,
+      "roc_auc": 0.963355247919896
+    },
+    "test_metrics": {
+      "accuracy": 0.8962061560486757,
+      "precision": 0.4831107619795758,
+      "recall": 0.9017595307917888,
+      "f1": 0.629156010230179,
+      "roc_auc": 0.9599472136109836
+    },
+    "training_time": 407.4306364059448
+  },
+  "comparison": {
+    "test_f1_difference": -0.07185796620172014,
+    "test_f1_percentage": -10.250575397579235,
+    "test_acc_difference": -0.025697924123120996,
+    "baseline_generalization_gap": 0.0022570516054840617,
+    "quantum_generalization_gap": 0.007207626133457379
+  }
+}

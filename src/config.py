@@ -57,10 +57,10 @@ QUANTUM_CONFIG = {
 
 # Training configuration
 TRAINING_CONFIG = {
-    "epochs": 200,
+    "epochs": 150,             # Reduced from 200 for faster training
     "learning_rate": 0.001,
     "weight_decay": 5e-4,
-    "patience": 20,
+    "patience": 15,            # Reduced from 20
     "val_split": 0.2,
     "test_split": 0.2,
     "random_seed": 42,
@@ -72,7 +72,7 @@ TRAINING_CONFIG = {
     "focal_gamma": 2.0,             # Focal loss gamma
     "clip_grad_norm": 1.0,          # Gradient clipping
     "lr_scheduler": True,           # Use learning rate scheduler
-    "lr_patience": 10,              # Patience for LR reduction
+    "lr_patience": 8,               # Reduced from 10
     "lr_factor": 0.5,               # LR reduction factor
 }
 

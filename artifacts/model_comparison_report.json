@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-02-15T19:51:35.205452",
+  "baseline_metrics_path": "C:\\Users\\tusha\\Documents\\UT_Dallas\\ACM_SP26\\Kryptos---Quantum-Blockchain-Fraud-Detection\\artifacts\\baseline_gat_metrics.json",
+  "quantum_metrics_path": "C:\\Users\\tusha\\Documents\\UT_Dallas\\ACM_SP26\\Kryptos---Quantum-Blockchain-Fraud-Detection\\artifacts\\quantum_gat_metrics.json",
+  "test_metrics_comparison": {
+    "Accuracy": {
+      "baseline": 0.913528990694345,
+      "quantum": 0.8830350751610594,
+      "improvement_percent": -3.3380347907851444,
+      "quantum_better": false
+    },
+    "F1 (Macro)": {
+      "baseline": 0.8147151711390379,
+      "quantum": 0.6811671424231966,
+      "improvement_percent": -16.391989918283993,
+      "quantum_better": false
+    },
+    "F1 (Micro)": {
+      "baseline": 0.913528990694345,
+      "quantum": 0.8830350751610594,
+      "improvement_percent": -3.3380347907851444,
+      "quantum_better": false
+    },
+    "Precision (Macro)": {
+      "baseline": 0.7625916285123964,
+      "quantum": 0.6744896532438479,
+      "improvement_percent": -11.552969108828384,
+      "quantum_better": false
+    },
+    "Recall (Macro)": {
+      "baseline": 0.9246262660381896,
+      "quantum": 0.6887030241615616,
+      "improvement_percent": -25.515524546745223,
+      "quantum_better": false
+    },
+    "ROC-AUC (OvR)": {
+      "baseline": -1.0,
+      "quantum": -1.0,
+      "improvement_percent": 0,
+      "quantum_better": false
+    }
+  },
+  "summary": {
+    "baseline_best_epoch": 153,
+    "quantum_best_epoch": 4,
+    "baseline_training_time": 282.07003,
+    "quantum_training_time": 41.550817,
+    "baseline_epochs_trained": 173,
+    "quantum_epochs_trained": 19,
+    "average_improvement_percent": -10.022758859237982,
+    "quantum_wins": 0,
+    "total_metrics": 6
+  }
+}
