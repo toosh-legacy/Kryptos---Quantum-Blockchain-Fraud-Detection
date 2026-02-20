@@ -1,0 +1,30 @@
+{
+  "model": "QIGAT (Corrected Architecture)",
+  "description": "Quantum phase mapping applied post-GAT with residual protection",
+  "timestamp": "2026-02-17 00:07:17",
+  "training_time": 15102.292716503143,
+  "architecture": {
+    "input_features": 182,
+    "first_gat_hidden": 128,
+    "quantum_expand_dim": 256,
+    "second_gat_hidden": 128,
+    "num_heads_gat": 4,
+    "dropout": 0.5,
+    "optimizer": "AdamW (lr=0.001)",
+    "loss": "Weighted CrossEntropy (NOT Focal)",
+    "key_fix": "Quantum applied post-GAT with residual \u03b1 scaling"
+  },
+  "test_metrics": {
+    "f1": 0.8920392584514721,
+    "accuracy": 0.978740157480315,
+    "precision": 0.8846431146359048,
+    "recall": 0.8995601173020528,
+    "roc_auc": 0.9888437545217728
+  },
+  "generalization": {
+    "train_f1": 0.988674217188541,
+    "val_f1": 0.9015971148892323,
+    "train_to_val_gap": 0.08707710229930865,
+    "val_to_test_gap": 0.009557856437760193
+  }
+}

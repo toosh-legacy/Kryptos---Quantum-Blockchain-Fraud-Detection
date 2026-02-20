@@ -1,0 +1,7 @@
+{
+  "baseline_64": 47878,
+  "baseline_128": 95750,
+  "qigat_128": 1149956,
+  "ratio_qigat_to_baseline_64": 24.01846359497055,
+  "ratio_qigat_to_baseline_128": 12.009984334203656
+}
